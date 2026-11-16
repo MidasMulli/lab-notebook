@@ -1,0 +1,47 @@
+{
+  "study": "STRM",
+  "date": "2026-11-16",
+  "contract": "CPU comparison of the hardware-validated native rule",
+  "panel": "46208 already-exposed source QUERY cells;15-class macro accuracy",
+  "training": "one pass over the same8192 encoded cells;60 naming labels",
+  "repetitions": "three stream-order/naming-example repetitions,one native initialization",
+  "rows": [
+    {
+      "rep": 501,
+      "LF": 82.14,
+      "F": 27.49,
+      "online_kmeans": 79.96,
+      "minibatch_kmeans": 85.32,
+      "binary_reservoir": 76.94
+    },
+    {
+      "rep": 502,
+      "LF": 77.97,
+      "F": 29.9,
+      "online_kmeans": 83.4,
+      "minibatch_kmeans": 83.86,
+      "binary_reservoir": 80.67
+    },
+    {
+      "rep": 503,
+      "LF": 74.17,
+      "F": 30.09,
+      "online_kmeans": 82.05,
+      "minibatch_kmeans": 81.04,
+      "binary_reservoir": 69.62
+    }
+  ],
+  "units": "percent; rounded for display",
+  "decision": "STOP_DEV_STREAMING_COMPARISON_NOT_QUALIFIED",
+  "criterion": "LF>=70%;LF-F>=3pp;LF within3pp of each streaming control in every repetition; exact fractions used",
+  "confirmation": "3840-cell confirmation panel not encoded or scored",
+  "limits": [
+    "Float-centre baselines matched stream/pass/record/label counts, not memory bytes.",
+    "No chip speed, energy or memory-efficiency frontier measured.",
+    "No fresh-panel confirmation."
+  ],
+  "audit_sha256": "4fcd4998e2c4b8568b85256a49fd4d0660c93fbd2fd02f479e40c5b7fefd1865",
+  "raw_manifest_sha256": "5da71a54b50fcfc650921b170f5d13d72d0e8f11bb9348c753b0e7bda435f7c4",
+  "recount_sha256": "e9e478a20dea1d39f64753880611d831bc4af228843229e7757ad085a34787f7",
+  "availability": "This file is a public result summary and audit identifiers, not the full raw score archive."
+}

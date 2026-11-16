@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A decision model on the Neural Engine, and the test that a broken port still passes · Lab notebook</title>
+<meta name="description" content="Kev-0.6B ported to Apple's Neural Engine: 7.16 ms median at 64 tokens, 155 of 155 decisions matching the reference, and why a first-question check missed a specific branch-mask fault.">
+<meta property="og:title" content="A decision model on the Neural Engine, and the test that a broken port still passes">
+<link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <div class="name"><a href="../../">Lab notebook</a> · Apple Neural Engine</div>
+  <h1>A decision model on the Neural Engine, and the test that a broken port still passes</h1>
+  <div class="meta">2026-09-22 · <span class="tag">Neural Engine</span><span class="tag">porting</span><span class="tag">verification</span></div>
+</div></header>
+<main><div class="wrap">
+
+
+<p class="claim">We ported Kev-0.6B, an open decision model, to Apple's Neural Engine. One document and a set of typed questions go in; one probability distribution per question comes out, in a single pass with no token generation.</p>
+
+<p>This port merges 196 trained LoRA deltas into the compiled model. It is distinct from the later mutable-adapter Kev builds. Input construction and the pointer head run on the host; the transformer trunk uses the Neural Engine.</p>
+<h3>Numbers</h3>
+<p>Measured on an M5 Pro, macOS 27.0 build 26A5421a, reproduced from a clean clone:</p>
+<table>
+  <tr><th>Measure</th><th class="num">Result</th></tr>
+  <tr><td>End-to-end warm latency, 64 tokens (60 samples)</td><td class="num">7.16 ms median, 7.62 ms p99</td></tr>
+  <tr><td>End-to-end warm latency, 256 tokens (60 samples)</td><td class="num">27.64 ms median, 28.61 ms p99</td></tr>
+  <tr><td>Predict-loop throughput, 64 tokens; inputs prepared once</td><td class="num">150.5 predictions/s</td></tr>
+  <tr><td>First-question decision agrees with Kev's reference, 155 real records</td><td class="num">155 / 155</td></tr>
+  <tr><td>Largest probability difference on those records (engine, fp16)</td><td class="num">3.80e-02</td></tr>
+</table>
+
+<h3>The part worth knowing</h3>
+<p>Kev answers several questions about one document in one pass, each in its own branch behind a block-causal mask. A check that reads only the first question missed the particular leakage fault we tested. With a plain causal mask replacing the block-causal one, later branches can see earlier branches: the first question still matched the reference (difference 3.10e-06), while the second and third went wrong (0.247 and 0.428). So the repo has a fifth gate that checks every question against the reference and also asks each question alone, which must equal its packed answer (measured 2.72e-07 on CPU).</p>
+
+<h3>How we know it runs on the engine</h3>
+<ul>
+  <li>On this tested graph, the CPU-only backend returned zero hidden states while the CPU-and-Neural-Engine path returned nonzero states matching the reference decisions. This backend contrast is read alongside the direct dispatch trace and rail activity below.</li>
+  <li>Apple's Neural Engine instrument counts 301 predict intervals for 301 predictions (plus 2 load intervals).</li>
+  <li>The sampled engine power rail went from 0 mW idle to a loaded peak of about 7,100 mW. This is not total system power or energy per decision.</li>
+</ul>
+
+<div class="limits">
+<h3>Limits</h3>
+<ul>
+  <li>This measures agreement with Kev's own implementation, not decision quality. Agreement is not accuracy.</li>
+  <li>The fp16 probabilities on the engine differ from the reference by up to 3.80e-02 on real records, although the decision never changed.</li>
+  <li>One machine, one OS build. The multi-question isolation gate runs on one record, with its 2.72e-07 isolation result measured on CPU. The 155-record decision check reads the first question; it is not a 155-record all-question validation.</li>
+</ul>
+</div>
+
+<h3>Check it yourself</h3>
+<ul>
+  <li><a href="https://github.com/MidasMulli/kev-ane">kev-ane</a>: the port, the six gates and the placement tool.</li>
+  <li>Kev itself: <a href="https://github.com/jaredpalmer/kev">github.com/jaredpalmer/kev</a>.</li>
+  <li>The later mutable-adapter diagram is a different build and is not used to illustrate these measurements.</li>
+</ul>
+
+</div></main>
+<footer><div class="wrap"><a href="../../">All entries</a> · <a href="https://x.com/NickLo641579">X</a> · <a href="https://github.com/MidasMulli">GitHub</a></div></footer>
+</body>
+</html>

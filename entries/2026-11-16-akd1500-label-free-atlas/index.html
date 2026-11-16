@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>An AKD1500 learned a cell-profile memory without labels, filmed live · Lab notebook</title>
+<meta name="description" content="One AKD1500 learning layer learned from 8,192 unlabelled mouse-cell profiles; 60 examples named its records; it scored 9,511 cells from another mouse. Continuous live capture, numbers and limits.">
+<meta property="og:title" content="An AKD1500 learned a cell-profile memory without labels, filmed live">
+<meta property="og:image" content="https://midasmulli.github.io/lab-notebook/assets/akd-atlas-live/atlas_map.png">
+<link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <div class="name"><a href="../../">Lab notebook</a> · AKD1500</div>
+  <h1>An AKD1500 learned a cell-profile memory without labels, filmed live</h1>
+  <div class="meta">2026-11-16 · <span class="tag">AKD1500</span><span class="tag">on-chip learning</span><span class="tag">biology</span></div>
+</div></header>
+<main><div class="wrap">
+
+<figure>
+  <video src="../../assets/akd-atlas-live/AKD1500_atlas_live_1080p60.mp4" poster="../../assets/akd-atlas-live/atlas_map.png" controls muted playsinline preload="metadata"></video>
+  <figcaption>The full 73-second capture, unedited: learning switched on, the memory records changing, the switch to frozen memory, live scoring, then the finished map. The host draws the map; the chip never sees cell positions.</figcaption>
+</figure>
+
+<p class="claim">One learning layer on a BrainChip AKD1500 learned from 8,192 encoded profiles of one mouse's brain cells, with no cell-type labels. Sixty labelled examples were used only to name its memory records. The chip then scored 9,511 cells from a different mouse; the host converted those scores into cell-type predictions using the fixed naming rule.</p>
+
+<h3>Numbers</h3>
+<p>Agreement with the atlas cell-type labels, balanced across classes and sections, on the same 9,511-cell panel:</p>
+<table>
+  <tr><th>Repetition</th><th class="num">Label-free memory</th><th class="num">Untrained memory</th><th class="num">Supervised native control</th></tr>
+  <tr><td>1 (LF arm filmed live)</td><td class="num">69.0%</td><td class="num">18.3%</td><td class="num">61.1%</td></tr>
+  <tr><td>2</td><td class="num">67.9%</td><td class="num">23.1%</td><td class="num">59.5%</td></tr>
+  <tr><td>3</td><td class="num">63.6%</td><td class="num">22.6%</td><td class="num">63.3%</td></tr>
+</table>
+<p>These are three stream-order and naming-example repetitions from one initialization, not three independent animals. The 60 source labels cover 15 cell types, four examples per type. The target panel is a capped, class-balanced sample from three sections of one other mouse; its scores do not estimate natural whole-brain cell proportions.</p>
+<p>The filmed repetition covers the label-free arm only. It matched the earlier run across all 17,763 chip calls and 18 memory readbacks, and all 9,511 decoded predictions matched the reference. The untrained and supervised columns come from the earlier physical study.</p>
+
+<figure>
+  <img src="../../assets/akd-atlas-live/atlas_map.png" alt="Three brain sections with four columns: atlas annotation, learned-memory predictions, agreement with the atlas, and untrained-memory predictions.">
+  <figcaption>Left to right: atlas class annotation; learned memory with a 60-label host readout; agreement with the atlas; untrained memory with the same naming budget. Grey points provide atlas context. Coordinates are used only by the host for plotting. This is a classification comparison, not a new biological discovery.</figcaption>
+</figure>
+<figure>
+  <img src="../../assets/akd-atlas-live/label_budget.png" alt="Accuracy against the number of labelled examples per cell type.">
+  <figcaption>Label budget on the same target panel. Rings mark physical chip scores with a host readout at four labels per type. Other AKD points use the CPU rule/readout; k-means and nearest-labelled are CPU controls. Lines are means over three order/label repetitions; bars show observed ranges, not confidence intervals.</figcaption>
+</figure>
+
+<div class="limits">
+<h3>Limits</h3>
+<ul>
+  <li>The host encodes the inputs, names the memory records from the 60 examples, and draws the map.</li>
+  <li>The live run is an exact repeat on the same panel, not perfect atlas classification and not a new generalization test.</li>
+  <li>Conventional exemplar and k-means software controls scored higher than the chip's label-free memory.</li>
+  <li>No speed or energy advantage is claimed or measured here.</li>
+</ul>
+</div>
+
+<h3>Since then: a streaming comparison (2026-11-16)</h3>
+<p>We compared the unchanged AKD label-free learning rule with fixed single-pass streaming baselines on the same encoded cells and the same 60 labels. The native rule scored 74.2–82.1% on the exposed development panel and clearly improved over untrained memory, but missed our three-percentage-point tolerance to minibatch k-means in all three repetitions and to online k-means in two. It met the reservoir comparison in all three. We stopped at development and left the new-cell confirmation panel unused. This was a CPU comparison of the hardware-validated rule; it does not measure chip speed or energy.</p>
+<p>This used the source-mouse development panel, not the 9,511-cell target panel above. The float-centre baselines use more memory bytes; matching passes, record count and labels is not byte matching. <a href="streaming-comparison.json">Result table, scope and audit hashes</a>.</p>
+<h3>Check it yourself</h3>
+<ul>
+  <li><a href="https://github.com/MidasMulli/akd1500-lab/releases/tag/research-20261116">The November release</a>: the video, the figures, small result tables and a software-only verification script, with SHA-256 sums.</li>
+  <li><a href="https://github.com/MidasMulli/akd1500-lab/blob/main/docs/NOVEMBER_2026.md">The release notes</a>, including three other November AKD1500 results.</li>
+  <li>On X: <a href="https://x.com/NickLo641579/status/2122162817730011226">the live-capture post</a>.</li>
+</ul>
+<p class="meta">Data and map credit: Xiaowei Zhuang and colleagues, <a href="https://alleninstitute.github.io/abc_atlas_access/descriptions/Zhuang_dataset.html">Allen Brain Cell Atlas mouse MERFISH data</a>, used under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
+
+</div></main>
+<footer><div class="wrap"><a href="../../">All entries</a> · <a href="https://x.com/NickLo641579">X</a> · <a href="https://github.com/MidasMulli">GitHub</a></div></footer>
+</body>
+</html>
