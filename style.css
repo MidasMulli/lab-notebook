@@ -23,7 +23,7 @@ h3 { font-size: 17px; margin: 26px 0 8px; color: var(--green); font-family: var(
 .entry-card h2 { margin: 2px 0 6px; font-size: 19px; }
 .entry-card p { margin: 0 0 8px; }
 .tag { display: inline-block; font-family: var(--mono); font-size: 12px; color: var(--cyan); border: 1px solid #164e63; border-radius: 999px; padding: 1px 9px; margin: 0 6px 4px 0; }
-.claim { font-size: 19px; line-height: 1.5; color: #f1f6fa; border-left: 3px solid var(--green); padding: 4px 0 4px 16px; margin: 18px 0; }
+.claim { font-size: 19px; line-height: 1.5; color: #f1f6fa; background: #0e1916; border: 1px solid #1b3a30; border-radius: 8px; padding: 12px 16px; margin: 18px 0; }
 figure { margin: 18px 0; }
 figure img, figure video { width: 100%; border-radius: 8px; border: 1px solid var(--line); background: #000; display: block; }
 figcaption { font-size: 14px; color: var(--muted); margin-top: 6px; }
