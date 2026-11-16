@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>An AKD1500 uses prediction errors to gate teaching, filmed live · Lab notebook</title>
+<meta name="description" content="Live repeat of a fixed binary-stream test on the AKD1500: the chip's own prediction errors opened 2 of 48 teaching gates and it recovered both changed answers; always-teach opened 48. Every output and measured memory snapshot matched the earlier run.">
+<meta property="og:title" content="An AKD1500 uses prediction errors to gate teaching, filmed live">
+<meta property="og:image" content="https://midasmulli.github.io/lab-notebook/assets/hal3-live/finished.png">
+<link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <div class="name"><a href="../../">Lab notebook</a> · AKD1500</div>
+  <h1>An AKD1500 uses prediction errors to gate teaching, filmed live</h1>
+  <div class="meta">2026-11-16 · <span class="tag">AKD1500</span><span class="tag">on-chip learning</span><span class="tag">prediction</span></div>
+</div></header>
+<main><div class="wrap">
+
+<figure>
+  <video src="../../assets/hal3-live/HAL3_LIVE_0d720c26_1080p60.mp4" poster="../../assets/hal3-live/finished.png" controls muted playsinline preload="metadata"></video>
+  <figcaption>The complete continuous screen capture, encoded at 60 fps (14 seconds). Each row appears after its whole queue of 48 predictions has been read back from the chip. The final readback remains on screen, labelled as finished.</figcaption>
+</figure>
+
+<p class="claim">The AKD1500 can use its own prediction errors to gate teaching. In this live repeat of a fixed binary-stream test, it opened 2 of 48 teaching gates and recovered both changed answers. Always-teach opened 48; cutting the gate or disabling learning kept the old answers. Holding history fixed caused errors.</p>
+
+<h3>Numbers</h3>
+<p>One synthetic stream of 48 next-bit predictions, with the rule changing two answers after step 16, run under five conditions:</p>
+<table>
+  <tr><th>Condition</th><th class="num">Teaching gates opened</th><th>Changed answers on revisit (steps 26, 27)</th><th class="num">Errors before change</th></tr>
+  <tr><td>Error-gated teaching</td><td class="num">2 of 48 (steps 18, 19)</td><td>both right</td><td class="num">0</td></tr>
+  <tr><td>Always teach</td><td class="num">48 of 48</td><td>both right</td><td class="num">0</td></tr>
+  <tr><td>Teaching gate cut</td><td class="num">0 of 48</td><td>both old answers</td><td class="num">0</td></tr>
+  <tr><td>Learning disabled</td><td class="num">learning off</td><td>both old answers</td><td class="num">0</td></tr>
+  <tr><td>History held fixed</td><td class="num">15 of 48</td><td>both right</td><td class="num">7</td></tr>
+</table>
+<p>Every output and every measured memory snapshot in all five conditions matched the earlier physical run byte for byte. The earlier study ran six preselected synthetic streams; error-gated teaching opened 2 of 48 gates and recovered both changed answers in all six.</p>
+
+<h3>The part worth knowing</h3>
+<p>In the error-gated condition, the teaching gate opens only when the prediction and supplied observation disagree. It recovers the same changed answers as always-teach, with 2 gate openings instead of 48. The short history and comparison run as programmed circuits on the chip; the host supplies the stream, initializes the rule and reads results back.</p>
+
+<div class="limits">
+<h3>Limits</h3>
+<ul>
+  <li>We supply the stream, the starting history and the initial rule. The history and error circuits are programmed on the chip, not learned.</li>
+  <li>This is a repeat of one previously tested synthetic stream, not a new task or a representative sample.</li>
+  <li>Gate openings are not connection writes: error-gated and always-teach each changed connections twice in the reference trace.</li>
+  <li>No timing advantage and no energy saving is claimed or measured.</li>
+</ul>
+</div>
+
+<h3>Evidence and availability</h3>
+<ul>
+  <li><a href="https://github.com/MidasMulli/akd1500-lab/blob/main/docs/NOVEMBER_2026.md">The November release notes</a> describe the original six-stream study (prediction-error gated teaching).</li>
+  <li>The run record, raw readbacks and independent recount are kept with the lab's internal audit; the video above is a transcode of the complete certified screen-recording master, with no cuts or added overlays.</li>
+</ul>
+
+</div></main>
+<footer><div class="wrap"><a href="../../">All entries</a> · <a href="https://x.com/NickLo641579">X</a> · <a href="https://github.com/MidasMulli">GitHub</a></div></footer>
+</body>
+</html>
